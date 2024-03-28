@@ -19,26 +19,21 @@ const options = {
   },
 };
 
-const unauthorizedOptions = {
-  method: 'GET', 
-  headers: {
-    'Content-Type': 'application/json',
-    'x-origin-client': 'mike:hogeboom:postman',
-  },
-};
-
 app.use(cors());
 
 app.get('/api/proxy', async (req, res) => {
-    try {
-      const response = await fetch(apiUrl, options); // Asegúrate de usar la variable correcta aquí
-      const data = await response.json();
-      res.json(data);
-    } catch (error) {
-      console.error('Error al hacer la llamada a la API:', error);
-      res.status(500).send('Error al procesar la solicitud');
-    }
+  const { region } = req.query;
+
+  try {
+    const response = await fetch(`${process.env.API_URL}region=${region}`, options); 
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error('Error al hacer la llamada a la API:', error);
+    res.status(500).send('Error al procesar la solicitud');
+  }
 });
+
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
